@@ -341,11 +341,10 @@ exports.Comment = async (req, res) => {
 exports.myFollowPost = async (req, res) => {
     try {
         const user = await User.findById(req.user)
-        const dataitem = await Postdata.find({$and:[{ postedBy: { $in: user.following }  }]}).sort({"_id":-1}).populate('postedBy', ' name profilePic').populate("comments.postedBy", "name profilePic")
+
+        const dataitem = await Postdata.find({$or:[{ postedBy: { $in: user.following }  },{ postedBy: req.user  }]} ).sort({"_id":-1}).populate('postedBy', ' name profilePic email').populate("comments.postedBy", "name profilePic email")
         res.status(200).json(dataitem)
     } catch (error) {
 
     }
 }
-
-// { postedBy: { $in: user.following }  },{ postedBy: req.user  }
